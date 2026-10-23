@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mail, MessageSquare, Camera } from 'lucide-react'
+import { Mail, MessageSquare } from 'lucide-react'
 import { ContactLink } from '../ui/ContactLink'
 import { siteConfig } from '../../data/siteConfig'
 
@@ -11,6 +11,44 @@ import { siteConfig } from '../../data/siteConfig'
  * - Left column: headline, copy, CTA, progress indicator, contact drawer
  * - Right column: editorial portrait with overlay caption
  */
+function FacebookIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  )
+}
+
+function InstagramIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  )
+}
+
 export function ComingSoonHero() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { hero, contact, heroImage } = siteConfig
@@ -179,8 +217,11 @@ export function ComingSoonHero() {
                   <ContactLink href={contact.whatsapp} icon={<MessageSquare size={15} />} external>
                     WhatsApp Editorial Desk
                   </ContactLink>
-                  <ContactLink href={contact.instagram} icon={<Camera size={15} />} external>
+                  <ContactLink href={contact.instagram} icon={<InstagramIcon size={15} />} external>
                     {contact.instagramHandle}
+                  </ContactLink>
+                  <ContactLink href={contact.facebook} icon={<FacebookIcon size={15} />} external>
+                    {contact.facebookHandle}
                   </ContactLink>
                 </div>
               </motion.div>

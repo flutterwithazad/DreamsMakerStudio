@@ -67,14 +67,19 @@ export const siteConfig = {
      * WhatsApp link. Format: https://wa.me/<country-code><number>
      * ⚠️ PLACEHOLDER — replace with real WhatsApp number
      */
-    whatsapp: 'https://wa.me/911234567890',
+    whatsapp: 'https://wa.me/919211040579',
 
     /**
      * Instagram profile URL.
-     * ⚠️ PLACEHOLDER — replace with real Instagram URL
      */
-    instagram: 'https://instagram.com/dreamsmakerstudio',
-    instagramHandle: '@dreamsmakerstudio',
+    instagram: 'https://www.instagram.com/dreamsmakerstudio13/',
+    instagramHandle: '@dreamsmakerstudio13',
+
+    /**
+     * Facebook profile/page URL.
+     */
+    facebook: 'https://www.facebook.com/dreamsmakerstudio13',
+    facebookHandle: 'Dreams Maker Studio',
   },
 
   /** SEO / meta */

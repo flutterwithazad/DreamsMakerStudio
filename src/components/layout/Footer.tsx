@@ -54,6 +54,22 @@ export function Footer() {
           >
             Press &amp; Archival
           </a>
+          <a
+            href={contact.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-label-md uppercase text-[--color-on-surface-variant] hover:text-[--color-on-surface] transition-colors"
+          >
+            Instagram
+          </a>
+          <a
+            href={contact.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-label-md uppercase text-[--color-on-surface-variant] hover:text-[--color-on-surface] transition-colors"
+          >
+            Facebook
+          </a>
           <span className="text-label-sm uppercase text-[--color-on-surface-variant]">
             © {new Date().getFullYear()} Dreams Maker Studio
           </span>
