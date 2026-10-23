@@ -55,13 +55,13 @@ export const siteConfig = {
      * Primary email address.
      * ⚠️ PLACEHOLDER — replace with real studio email
      */
-    email: 'concierge@dreamsmaker.studio',
+    email: 'dreamsmakerstudio21@gmail.com',
 
     /**
      * Casting / agency dossier email.
      * ⚠️ PLACEHOLDER — replace with real casting email
      */
-    castingEmail: 'casting@dreamsmaker.studio',
+    castingEmail: 'dreamsmakerstudio21@gmail.com',
 
     /**
      * WhatsApp link. Format: https://wa.me/<country-code><number>

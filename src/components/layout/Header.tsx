@@ -7,7 +7,7 @@ import { siteConfig } from '../../data/siteConfig'
  * pages linked in the Stitch design do not yet exist.
  */
 export function Header() {
-  const { brandName, brandDescriptor, contact } = siteConfig
+  const { brandName, contact } = siteConfig
 
   return (
     <header
@@ -26,21 +26,18 @@ export function Header() {
           paddingRight: 'var(--spacing-margin-mobile)',
         }}
       >
-        {/* ── Wordmark ── */}
-        <div className="flex flex-col gap-1">
-          <span
-            className="text-headline-md uppercase text-[--color-primary] leading-none"
-            style={{ letterSpacing: '-0.01em' }}
-            aria-label={brandName}
-          >
-            {brandName}
-          </span>
-          <span
-            className="text-label-sm uppercase text-[--color-on-surface-variant]"
-          >
-            {brandDescriptor}
-          </span>
-        </div>
+        {/* ── Brand Logo ── */}
+        <a
+          href="/"
+          className="flex items-center group transition-opacity duration-200 hover:opacity-80"
+          aria-label={brandName}
+        >
+          <img
+            src="/images/dms-logo-black.png"
+            alt={brandName}
+            className="h-10 md:h-12 w-auto object-contain"
+          />
+        </a>
 
         {/* ── CTA ── */}
         <a

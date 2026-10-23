@@ -4,7 +4,7 @@ import { siteConfig } from '../../data/siteConfig'
  * Footer — minimal editorial footer with contact links and copyright.
  */
 export function Footer() {
-  const { contact } = siteConfig
+  const { brandName, contact } = siteConfig
 
   return (
     <footer
@@ -22,11 +22,13 @@ export function Footer() {
           gap: 'var(--spacing-space-md)',
         }}
       >
-        {/* ── Left: tagline + headline ── */}
-        <div className="flex flex-col gap-1">
-          <span className="text-label-sm uppercase text-[--color-on-surface-variant]">
-            Models · Photography · Creative
-          </span>
+        {/* ── Left: logo + headline ── */}
+        <div className="flex flex-col gap-3">
+          <img
+            src="/images/dms-logo-black.png"
+            alt={brandName}
+            className="h-10 w-auto object-contain self-start"
+          />
           <p
             className="text-headline-md uppercase text-[--color-primary]"
             style={{ letterSpacing: '-0.01em' }}
