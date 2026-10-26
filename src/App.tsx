@@ -29,7 +29,8 @@ function Layout() {
       document.removeEventListener('pointerdown', onPointerDown)
     }
   }, [menu])
-  const { pathname, hash, search } = useLocation()
+  const { pathname: rawPathname, hash, search } = useLocation()
+  const pathname = rawPathname.replace(/\/+$/, '') || '/'
   useEffect(() => {
     setMenu(false)
     document.title = `Dreams Maker Studio | ${titles[pathname] ?? serviceDetails.find(item => pathname === `/services/${item.slug}`)?.title ?? 'Page Not Found'}`
