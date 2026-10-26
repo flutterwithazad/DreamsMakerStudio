@@ -1,0 +1,94 @@
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { ArrowUpRight, ArrowRight, Plus, Minus, X, ChevronLeft, ChevronRight, Check } from 'lucide-react'
+import { EnquiryLink } from '../components/EnquiryLink'
+import { siteConfig } from '../data/siteConfig'
+import { work, categories, faqs } from '../data/homeContent'
+import { serviceDetails } from '../data/services'
+
+function PageIntro({ label, title, italic, description }: {label: string; title: string; italic: string; description: string}) {
+  return <section className="page-intro section-wrap"><div className="breadcrumb"><Link to="/">HOME</Link><span>/</span><span>{label}</span></div><div className="page-intro-row"><h1>{title}<br/><em>{italic}</em></h1><p>{description}</p></div></section>
+}
+function ContactBanner({ title = 'Your next chapter', italic = 'starts here.' }: {title?: string; italic?: string}) {
+  return <section className="inner-cta section-wrap"><div><span className="eyebrow">LET’S MAKE SOMETHING PERSONAL.</span><h2>{title}<br/><em>{italic}</em></h2></div><Link to="/contact" className="button button-dark">Start a conversation <ArrowUpRight size={19}/></Link></section>
+}
+function FAQ({ items = faqs }: {items?: string[][]}) {
+  const [open, setOpen] = useState<number | null>(0)
+  return <div className="faq-list">{items.map(([question,answer],i) => <div className="faq-item" key={question}><h3><button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i} aria-controls={`inner-faq-${i}`}>{question}{open === i ? <Minus size={18}/> : <Plus size={18}/>}</button></h3><div id={`inner-faq-${i}`} hidden={open !== i}><p>{answer}</p></div></div>)}</div>
+}
+function DemoImage({ image, alt, className = '' }: {image: string; alt: string; className?: string}) {
+  return <figure className={`demo-figure ${className}`}><img src={`/images/demo/${image}.jpg`} alt={`${alt} — demo photography`} loading="lazy"/><figcaption>DEMO PHOTOGRAPHY / CREATIVE DIRECTION</figcaption></figure>
+}
+
+export function StudioPage() {
+  return <main id="main"><PageIntro label="THE STUDIO" title="A space for" italic="your kind of dream." description="Photography. People. Possibilities. Get to know the thinking behind Dreams Maker Studio."/>
+    <div className="studio-editorial section-wrap"><DemoImage image="studio" alt="A photographer preparing a camera"/><div className="studio-editorial-note"><span>THE WAY WE SEE IT</span><p>Great photographs<br/>begin with<br/><em>real connection.</em></p></div></div>
+    <section className="story-section section-wrap"><span className="eyebrow">OUR POINT OF VIEW</span><div><h2>You bring who you are.<br/>We start <em>from there.</em></h2><p>Dreams Maker Studio brings together portfolio photography, celebrity shoots, meetups, and conversations around casting and modeling. At the heart of it is a simple idea: your individuality deserves space.</p><p>You might be planning your first shoot, refreshing how you present yourself, or exploring an experience you’ve always wanted. We want the first step to feel approachable, with a clear conversation about your goals and what’s possible.</p><Link to="/services" className="text-link">Find your experience <ArrowUpRight size={17}/></Link></div></section>
+    <section className="principles-section section-wrap"><div className="section-kicker"><span>THE DETAILS THAT MATTER</span><span>THOUGHTFUL FROM THE START</span></div><div className="principles-grid">{[['Individuality, always','A strong image doesn’t need you to become someone else. Your personality is the starting point.'],['A clear conversation','Ask about the format, inclusions, fees, and deliverables. The details should be understood before a booking.'],['Room for your first step','You don’t need to have every answer. Bring your references, questions, and ideas to the conversation.']].map(([title,text],i) => <article key={title}><span>0{i+1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+    <section className="studio-split section-wrap"><DemoImage image="portrait" alt="Natural light portrait"/><div><span className="eyebrow">THE PERSON BEHIND THE PORTFOLIO</span><h2>More you.<br/><em>Less ordinary.</em></h2><p>A portfolio is an introduction. A photograph is a point of view. A shared experience is a memory. Whatever brings you here, let’s make it personal.</p><Link className="text-link" to="/portfolio">Explore the visual direction <ArrowUpRight size={17}/></Link></div></section><ContactBanner/></main>
+}
+
+export function ServicesPage() {
+  return <main id="main"><PageIntro label="OUR SERVICES" title="Find your" italic="next possibility." description="A first portfolio, a shared spotlight, or a new direction. Explore the experiences at Dreams Maker Studio."/>
+    <section className="service-catalog section-wrap" aria-label="Our services">{serviceDetails.map((item,i) => <article className="catalog-row" key={item.slug}><Link to={`/services/${item.slug}`} className="catalog-image" aria-label={`Explore ${item.title}`}><DemoImage image={item.image} alt={`${item.title} creative inspiration`}/></Link><div className="catalog-copy"><span className="eyebrow">0{i+1} / {item.tag}</span><h2>{item.title}</h2><p>{item.summary}</p><Link to={`/services/${item.slug}`} className="text-link">Explore the details <ArrowUpRight size={18}/></Link></div></article>)}</section>
+    <section className="booking-note section-wrap"><span className="eyebrow">BEFORE YOU BOOK</span><h2>Clear details.<br/><em>Better experiences.</em></h2><p>Every service has its own format. Speak with the studio about availability, fees, inclusions, and booking terms before confirming. Casting decisions are separate from paid photography and event services.</p></section>
+    <section className="faq-section section-wrap"><div><span className="eyebrow">GOOD QUESTIONS</span><h2>A little more<br/><em>clarity.</em></h2></div><FAQ/></section><ContactBanner title="Not sure where" italic="to begin?"/></main>
+}
+
+export function ServicePage() {
+  const {slug} = useParams()
+  const item = serviceDetails.find(service => service.slug === slug)
+  if (!item) return <NotFoundPage/>
+  return <main id="main"><section className="service-detail-hero"><div className="service-detail-copy"><div className="breadcrumb"><Link to="/services">OUR SERVICES</Link><span>/</span><span>{item.title.toUpperCase()}</span></div><span className="eyebrow">{item.tag}</span><h1>{item.headline}<br/><em>{item.word}</em></h1><p>{item.description}</p><Link to={`/contact?service=${encodeURIComponent(item.title)}`} className="button button-dark">Enquire about {item.title.toLowerCase()} <ArrowUpRight size={18}/></Link></div><DemoImage image={item.image} alt={`${item.title} visual direction`}/></section>
+    <section className="service-expectations section-wrap"><div className="section-kicker"><span>THE EXPERIENCE / {item.title.toUpperCase()}</span><span>A THOUGHTFUL NEXT STEP</span></div><div className="story-section"><h2>What the journey<br/>can <em>look like.</em></h2><p>{item.audience}</p></div><div className="detail-steps">{item.steps.map(([title,text],i) => <article key={title}><span>0{i+1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+    <section className="inclusions-section section-wrap"><div><span className="eyebrow">KNOW WHAT YOU’RE BOOKING</span><h2>Every detail.<br/><em>Clearly discussed.</em></h2><p>Confirm these points with the studio before booking. Exact inclusions and fees are shared for your selected service or experience.</p></div><ul>{item.checklist.map(text => <li key={text}><Check size={18}/>{text}</li>)}</ul></section>
+    {slug === 'casting-modeling' && <aside className="casting-note section-wrap"><span className="eyebrow">A CLEAR DISTINCTION</span><p>A paid shoot or event booking does not guarantee casting selection, representation, or modeling work. Project decisions depend on the brief and the people making the selection.</p></aside>}
+    <section className="related-section section-wrap"><div className="section-heading"><h2>Other <em>possibilities.</em></h2><Link to="/services" className="text-link">All services <ArrowUpRight size={16}/></Link></div><div className="related-grid">{serviceDetails.filter(other => other.slug !== slug).map(other => <Link key={other.slug} to={`/services/${other.slug}`}><span>{other.title}</span><ArrowUpRight size={22}/></Link>)}</div></section><ContactBanner/></main>
+}
+
+export function PortfolioPage() {
+  const [filter,setFilter] = useState<string>('All work')
+  const [selected,setSelected] = useState<number | null>(null)
+  const dialog = useRef<HTMLDialogElement>(null)
+  const opener = useRef<HTMLElement | null>(null)
+  const isOpen = selected !== null
+  const visible = work.filter(item => filter === 'All work' || item.category === filter)
+  const selectedItem = selected === null ? null : work[selected]
+  useEffect(() => {
+    if (isOpen) {opener.current = document.activeElement as HTMLElement;dialog.current?.showModal();document.body.style.overflow = 'hidden'}
+    else {dialog.current?.close();document.body.style.overflow = '';opener.current?.focus()}
+    return () => {document.body.style.overflow = ''}
+  },[isOpen])
+  const move = (direction: number) => {if (selected === null) return;const position = visible.indexOf(work[selected]);setSelected(work.indexOf(visible[(position + direction + visible.length) % visible.length]))}
+  return <main id="main"><PageIntro label="PORTFOLIO" title="A point of view." italic="A world of expression." description="Explore a curated visual direction, from intimate portraits to expressive fashion frames. Demo photography, ready to make way for our studio’s work."/>
+    <section className="portfolio-page section-wrap"><div className="work-toolbar"><div className="filters" aria-label="Filter portfolio">{categories.map(category => <button key={category} className={filter === category ? 'active' : ''} aria-pressed={filter === category} onClick={() => setFilter(category)}>{category}</button>)}</div><span className="demo-note" aria-live="polite">{visible.length.toString().padStart(2,'0')} FRAMES / DEMO COLLECTION</span></div><div className="portfolio-gallery">{visible.map((item,i) => <button className="portfolio-piece" key={item.title} onClick={() => setSelected(work.indexOf(item))} aria-label={`Open ${item.title}`}><div className="portfolio-piece-image"><img src={`/images/demo/${item.image}.jpg`} alt={`${item.title} — demo photography`} loading="lazy"/><span className="image-view"><ArrowUpRight size={25}/></span><span className="work-category">{item.category}</span></div><div className="portfolio-piece-caption"><div><h2>{item.title}</h2><p>{item.detail}</p></div><span>0{i+1}</span></div></button>)}</div><p className="portfolio-disclosure">The photographs in this collection illustrate the website’s creative direction. They are demo images and are not presented as client projects.</p></section><ContactBanner title="The next story" italic="could be yours."/>
+    <dialog ref={dialog} className="image-dialog" aria-label="Portfolio image viewer" onCancel={() => setSelected(null)} onClick={e => {if (e.target === e.currentTarget) setSelected(null)}} onKeyDown={e => {if(e.key === 'ArrowLeft') move(-1);if(e.key === 'ArrowRight') move(1)}}><button className="modal-close" aria-label="Close image" onClick={() => setSelected(null)}><X/></button>{selectedItem && <><div className="lightbox-image"><img src={`/images/demo/${selectedItem.image}.jpg`} alt={`${selectedItem.title} — demo photography`}/>{visible.length > 1 && <><button className="lightbox-prev" aria-label="Previous image" onClick={() => move(-1)}><ChevronLeft/></button><button className="lightbox-next" aria-label="Next image" onClick={() => move(1)}><ChevronRight/></button></>}</div><div className="modal-caption" aria-live="polite"><h3>{selectedItem.title}</h3><p>{selectedItem.category} · Demo photography</p></div></>}</dialog>
+  </main>
+}
+
+export function ExperiencesPage() {
+  return <main id="main"><PageIntro label="CELEBRITY EXPERIENCES" title="Beyond the screen." italic="Into the moment." description="A shared frame. A personal encounter. Explore celebrity shoots and meetups with Dreams Maker Studio."/>
+    <section className="experience-editorial section-wrap"><div className="experience-quote"><span className="eyebrow">SOME MOMENTS ARE BETTER IN PERSON.</span><p>Less scrolling.<br/>More <em>being there.</em></p><div className="experience-symbol" aria-hidden="true">✳</div><span className="eyebrow">PEOPLE / CONNECTIONS / MEMORIES</span></div><div className="experience-options">{serviceDetails.slice(1,3).map((item,i) => <article key={item.slug}><span className="eyebrow">0{i+1} / THE EXPERIENCE</span><h2>{item.title}</h2><p>{item.summary}</p><Link to={`/services/${item.slug}`} className="text-link">Discover the format <ArrowUpRight size={17}/></Link></article>)}</div></section>
+    <section className="announcement-section section-wrap"><span className="eyebrow">WHAT’S NEXT</span><div className="announcement-layout"><h2>Your next<br/><em>“I was there.”</em></h2><div><p>Looking for an upcoming experience? Contact the studio for confirmed announcements, guest availability, and the details of any currently bookable events.</p><p className="small-copy">Dates, guest appearances, fees, and access are confirmed separately for each event.</p><EnquiryLink className="button button-dark" service="upcoming celebrity experiences">Ask the studio <ArrowUpRight size={18}/></EnquiryLink></div></div></section>
+    <section className="faq-section section-wrap"><div><span className="eyebrow">BEFORE THE MOMENT</span><h2>Know before<br/><em>you go.</em></h2></div><FAQ items={[
+      ['How do I check upcoming events?', 'Contact the studio on WhatsApp or email for confirmed announcements. Our Instagram profile is another place to follow studio updates.'],
+      ['Is a photo with the celebrity included?', 'Photo opportunities depend on the event or shoot format. Confirm whether individual or group photographs are included before booking.'],
+      ['Where will the experience take place?', 'The venue and arrival details are shared for the specific confirmed event. Please verify the location with the studio before planning travel.'],
+      ['What if the schedule changes?', 'Ask about cancellation, rescheduling, and refund terms before booking. Arrangements are confirmed for each individual experience.'],
+    ]}/></section><ContactBanner title="A moment you’ve" italic="always imagined?"/></main>
+}
+
+export function ContactPage() {
+  const [params] = useSearchParams()
+  const [name,setName] = useState('')
+  const [interest,setInterest] = useState(params.get('service') ?? '')
+  const [message,setMessage] = useState('')
+  const [prepared,setPrepared] = useState(false)
+  const enquiry = `Hi Dreams Maker Studio, I’m ${name.trim()}. I’m interested in ${interest || 'exploring your services'}.\n\n${message.trim()}\n\nPlease share availability, inclusions, and fees.`
+  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault();setPrepared(true) }
+  return <main id="main"><PageIntro label="GET IN TOUCH" title="Big dreams." italic="Start with a hello." description="A first portfolio, a question, or an idea that won’t leave you. We’d love to hear what brings you here."/>
+    <section className="contact-page-layout section-wrap"><aside className="contact-directory"><span className="eyebrow">A CONVERSATION STARTS HERE</span><h2>Let’s find<br/><em>your frame.</em></h2><p>Tell us a little about yourself and the service you’re exploring. We’ll take the details from there.</p><div className="contact-channel"><span>01 / WHATSAPP</span><EnquiryLink>Chat with the studio <ArrowUpRight size={18}/></EnquiryLink></div><div className="contact-channel"><span>02 / EMAIL</span><a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}<ArrowUpRight size={18}/></a></div><div className="contact-channel"><span>03 / FOLLOW THE STUDIO</span><a href={siteConfig.contact.instagram} target="_blank" rel="noreferrer">{siteConfig.contact.instagramHandle}<ArrowUpRight size={18}/></a></div><div className="visit-note"><span className="eyebrow">PLANNING A VISIT?</span><p>Please contact the studio to confirm the location and an appointment before travelling.</p></div></aside>
+    <div className="enquiry-panel"><span className="eyebrow">LET’S GET TO KNOW YOUR IDEA</span><h2>Your next <em>chapter.</em></h2><form onSubmit={submit} onChange={() => setPrepared(false)}><div className="field"><label htmlFor="enquiry-name">Your name <span>*</span></label><input id="enquiry-name" name="name" value={name} onChange={e => setName(e.target.value)} autoComplete="name" placeholder="What should we call you?" required maxLength={100} pattern=".*\S.*"/></div><div className="field"><label htmlFor="enquiry-service">What brings you here? <span>*</span></label><select id="enquiry-service" name="service" value={interest} onChange={e => setInterest(e.target.value)} required><option value="">Choose a service</option>{serviceDetails.map(item => <option key={item.slug} value={item.title}>{item.title}</option>)}<option value="Something else">Something else</option></select></div><div className="field"><label htmlFor="enquiry-message">A little about your idea <span>*</span></label><textarea id="enquiry-message" name="message" rows={4} placeholder="Your goals, preferred dates, or anything you’d like to ask…" value={message} onChange={e => setMessage(e.target.value)} required minLength={10} maxLength={2000}/></div><p className="form-note">This form prepares your message for WhatsApp. You review and send it there; nothing is submitted or stored on this website.</p><button className="button button-dark" type="submit">Prepare my enquiry <ArrowRight size={18}/></button></form>{prepared && <div className="enquiry-ready" role="status"><span className="eyebrow">YOUR MESSAGE IS READY</span><p className="message-preview">{enquiry}</p><a className="button button-dark" href={`${siteConfig.contact.whatsapp}?text=${encodeURIComponent(enquiry)}`} target="_blank" rel="noreferrer">Continue to WhatsApp <ArrowUpRight size={18}/></a><p>WhatsApp opens in a new tab. Press send there when you’re ready.</p></div>}</div></section>
+    <section className="faq-section section-wrap"><div><span className="eyebrow">BEFORE WE SAY HELLO</span><h2>A few useful<br/><em>answers.</em></h2></div><FAQ/></section></main>
+}
+export function NotFoundPage() { return <main id="main"><section className="not-found section-wrap"><span className="eyebrow">404 / A DIFFERENT DIRECTION</span><h1>This frame is<br/><em>still empty.</em></h1><p>The page you’re looking for isn’t here. Let’s get you back to the studio.</p><Link to="/" className="button button-dark">Back to home <ArrowUpRight size={18}/></Link></section></main> }
